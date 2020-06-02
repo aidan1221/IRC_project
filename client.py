@@ -305,28 +305,3 @@ while room[1] != "disconnect":
 
 
 
-
-
-# Alternate message handling from sentdex tutorial
-
-    # message = input(f"{display_name} > ") # blocks input from other users
-    #
-    # if message:
-    #     message = message.encode("utf-8")
-    #     message_header = f"{len(message):<{HEADER_LENGTH}}".encode("utf-8")
-    #     client_socket.send(message_header + message)
-    # try:
-    #     while True:
-    #         # receive messages
-    #         username_header = client_socket.recv(HEADER_LENGTH)
-    #         if not len(username_header):
-    #             print("Connection closed by server")
-    #             sys.exit()
-    #         username_length = int(username_header.decode("utf-8"))
-    #         username = str(client_socket.recv(username_length).decode("utf-8"))
-    #
-    #         message_header = client_socket.recv(HEADER_LENGTH)
-    #         message_length = int(message_header.decode("utf-8"))
-    #         message = client_socket.recv(message_length).decode("utf-8")
-    #
-    #         print(f"{username} > {message}")
