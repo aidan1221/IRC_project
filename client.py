@@ -248,13 +248,16 @@ def list_users_in_room(room):
 
 
 def direct_message_multiple_rooms(room_list, room_choices):
+    global display_name
     rooms_to_message = []
     for num in room_choices:
         rooms_to_message.append(room_list[num - 1])
     print(f"Direct Messaging Rooms - {rooms_to_message}")
-    message = input("Direct Message to Multiple Rooms > ").encode("utf-8")
-    message_header = f"{len(message):<{HEADER_LENGTH}}".encode("utf-8")
-    message_package = {}
+    message = input("Direct Message to Multiple Rooms > ")
+    message_package = {"DM":True, "rooms":rooms_to_message, "message":message, "user": display_name}
+    message_package = pickle.dumps(message_package)
+    message_header = f"{len(message_package):<{HEADER_LENGTH}}".encode("utf-8")
+    client_socket.send(message_header + message_package)
 
 
 

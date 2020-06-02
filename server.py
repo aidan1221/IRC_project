@@ -102,12 +102,30 @@ while True:
 
                     message = pickle.loads(rcvd_package['data'])
                     user = message['user'].encode("utf-8")
-                    room = message['room']
+
                     client_info = (notified_socket, user)
+
+                    if "DM" in message.keys():
+                        user_header = f"{len(user):<{HEADER_LENGTH}}".encode("utf-8")
+                        for r in message['rooms']:
+                            room_header = f"{len(r):<{HEADER_LENGTH}}".encode("utf-8")
+                            message_header = f"{len(message['message']):<{HEADER_LENGTH}}".encode("utf-8")
+                            message = message['message'].encode("utf-8")
+                            clients_in_room = []
+                            for client in chatrooms[room]:
+                                clients_in_room.append(client[0])
+
+                            for client_socket in clients_in_room:
+                                if client_socket != notified_socket:
+                                    client_socket.send(user_header + user + room_header + room.encode(
+                                        "utf-8") + message_header + message)
+                        continue
 
                     # manage room information - client joins room before sending message to that room
                     # if they have not joined already
                     # If room doesn't exist yet, add to dict and create new client list for new room
+
+                    room = message['room']
 
                     try:
                         if client_info not in chatrooms[room]:
