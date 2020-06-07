@@ -106,19 +106,20 @@ while True:
                     client_info = (notified_socket, user)
 
                     if "DM" in message.keys():
+
                         user_header = f"{len(user):<{HEADER_LENGTH}}".encode("utf-8")
                         for r in message['rooms']:
-                            room_header = f"{len(r):<{HEADER_LENGTH}}".encode("utf-8")
-                            message_header = f"{len(message['message']):<{HEADER_LENGTH}}".encode("utf-8")
-                            message = message['message'].encode("utf-8")
                             clients_in_room = []
-                            for client in chatrooms[room]:
+                            room = r.encode("utf-8")
+                            room_header = f"{len(room):<{HEADER_LENGTH}}".encode("utf-8")
+                            message_to_send = message['message'].encode("utf-8")
+                            message_header = f"{len(message_to_send):<{HEADER_LENGTH}}".encode("utf-8")
+
+                            for client in chatrooms[r]:
                                 clients_in_room.append(client[0])
 
                             for client_socket in clients_in_room:
-                                if client_socket != notified_socket:
-                                    client_socket.send(user_header + user + room_header + room.encode(
-                                        "utf-8") + message_header + message)
+                                client_socket.send(user_header + user + room_header + room + message_header + message_to_send)
                         continue
 
                     # manage room information - client joins room before sending message to that room
